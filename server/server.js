@@ -5,6 +5,7 @@ import connectDB from "./db";
 import itemRoutes from "./routes/itemRoutes";
 import authRoutes from "./routes/authRoutes"
 import userRoutes from "./routes/userRoutes"
+import profileRoute from "./routes/profileRoute"
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/api', itemRoutes)
 app.use('/api', authRoutes)
 app.use('/api', userRoutes)
+app.use('/api', profileRoute)
 
 // home route
 app.get('/', (req, res) => {

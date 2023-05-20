@@ -1,22 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/userModel";
-
-// Function to generate an authentication token
-const generateAuthToken = (user) => {
-  // Generate a unique payload based on the user details
-  const payload = {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    isAdmin: user.isAdmin,
-  };
-
-  // Generate a JWT token with the payload and a secret key
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-  return token;
-};
+import generateToken from "../utils/generateToken";
 
 export const register = async (req, res) => {
   try {
@@ -48,18 +33,17 @@ export const register = async (req, res) => {
       name,
       email,
       password: hashPassword,
-      isAdmin: req.body.isAdmin || false,
     });
     // Save the user to the database
     await newUser.save();
 
     // Generate an authentication token
-    const token = generateAuthToken(newUser);
+    const token = generateToken(newUser._id);
 
     res.status(200).json({
       message: "User registered successfully",
       token,
-      data: { newUser },
+      data: newUser,
     });
   } catch (error) {
     res.status(500).json({ error: "Failed to register user" });
@@ -90,31 +74,14 @@ export const login = async (req, res) => {
     }
 
     // Generate an authentication token
-    const token = generateAuthToken(user);
-
-    // res.cookie("jwt", token, {
-    //   httpOnly: true,
-    //   expiresIn: "1d",
-    // });
+    const token = generateToken(user._id);
 
     res.status(200).json({
       message: "Logged in successfully",
       token,
-      data: { user },
+      data: user,
     });
   } catch (error) {
     res.status(500).json({ error: "Failed to login" });
-  }
-};
-
-export const logout = (req, res) => {
-  try {
-    // Clear JWT token from client-side cookie
-    res.clearCookie("jwt");
-
-    res.status(200).json({ message: "Logged out successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Failed to logout" });
   }
 };

@@ -7,12 +7,11 @@ import {
   deleteItem,
   markItemSold,
 } from "../controllers/itemController";
-import { verifyTokenAndAdmin } from "../middleware/adminAuth";
 
 const router = express.Router();
 
 // create a new item
-router.post("/items", verifyTokenAndAdmin, createItem);
+router.post("/items", createItem);
 
 // retrieve all items
 router.get("/items", getAllItems);
@@ -21,12 +20,12 @@ router.get("/items", getAllItems);
 router.get("/items/:id", getItem);
 
 // update an item
-router.put("/items/:id", verifyTokenAndAdmin, updateItem);
+router.put("/items/:id", updateItem);
 
 // delete an item
-router.delete("/items/:id", verifyTokenAndAdmin, deleteItem);
+router.delete("/items/:id", deleteItem);
 
 // mark an item as sold
-router.put("/items/:id/sold", verifyTokenAndAdmin, markItemSold);
+router.put("/items/:id/sold", markItemSold);
 
 export default router;
