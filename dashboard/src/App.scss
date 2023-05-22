@@ -1,0 +1,68 @@
+@import "bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: 'Roboto', sans-serif;
+
+    .ant-layout{
+        min-height: 100vh;
+
+        .ant-layout-sider{
+            flex: 0 0 250px !important;
+            max-width: 250px !important;
+            min-width: 250px !important;
+            width: 250px !important;
+        }
+        .ant-layout-sider-collapsed{
+            flex: 0 0 80px !important;
+            max-width: 80px !important;
+            min-width: 80px !important;
+            width: 80px !important;
+        }
+        .ant-menu-title-content{
+            font-size: 16px !important;
+        }
+
+        .ant-layout-header{
+            h5{
+                line-height: 20px;
+                font-size: 14px;
+            }
+            p{
+                line-height: 20px;
+                font-size: 13px;
+            }
+            .badge{
+                top: 16px;
+                right: -6px;
+            }
+        }
+
+        .logo{
+            background: #ffd333;
+            margin: 0;
+            height: 64px;
+        }
+
+        main{
+            overflow: scroll;
+            background: transparent !important;
+        }
+    }
+
+    .green{
+        color: green;
+    }
+    .red{
+        color: red;
+    }
+    .delete-btn{
+        background: none !important;
+        border: none !important;
+    }
+}

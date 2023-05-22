@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./db";
-import itemRoutes from "./routes/itemRoutes";
+import productRoutes from './routes/productRoutes'
 import authRoutes from "./routes/authRoutes"
 import userRoutes from "./routes/userRoutes"
 import profileRoute from "./routes/profileRoute"
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cors());
 
 // custom routes
-app.use('/api', itemRoutes)
+app.use('/api', productRoutes)
 app.use('/api', authRoutes)
 app.use('/api', userRoutes)
 app.use('/api', profileRoute)

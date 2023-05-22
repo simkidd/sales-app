@@ -23,7 +23,7 @@ const protect = async (req, res, next) => {
       if (user) {
         req.user = user;
       } else {
-        res.status(404).json({error: "User not found"});
+        res.status(404).json({ error: "User not found" });
       }
 
       next(); // Proceed to the next middleware or route handler
@@ -39,4 +39,12 @@ const protect = async (req, res, next) => {
   }
 };
 
-export default protect;
+export const admin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    res.status(401).json({ error: "Not authorized as an Admin" });
+  }
+};
+
+export default protect
