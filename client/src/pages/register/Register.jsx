@@ -1,40 +1,57 @@
 import React, { useState } from "react";
 import axios from "axios";
+import apiConfig from "../../utils/apiConfig";
 
-const AdminRegister = () => {
-  const [username, setUsername] = useState("");
+const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const { base_url } = apiConfig;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/admin/register", {
-        username,
+      await axios.post(`${base_url}/register`, {
+        name,
+        email,
         password,
       });
       setSuccess(true);
-      setUsername("");
+      setName("")
+      setEmail("");
       setPassword("");
+      setError(null);
     } catch (error) {
       setError(error.response.data.error);
+      setSuccess(false);
     }
   };
 
   return (
     <div>
-      <h2>Admin Registration</h2>
+      <h2>Create an account</h2>
       {error && <p>Error: {error}</p>}
       {success && <p>Registration successful!</p>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="name">Name:</label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
@@ -52,4 +69,4 @@ const AdminRegister = () => {
   );
 };
 
-export default AdminRegister;
+export default Register;
