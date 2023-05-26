@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 const ProductCard = ({ product }) => {
   const Img = product.image
     ? product.image
-    : "https://ng.jumia.is/unsafe/fit-in/300x300/filters:fill(white)/product/74/8768022/1.jpg?5729";
+    : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
 
   const Sold = product.isSold && "Sold";
 
   return (
-    <div className="product__card">
-      <Link>
+    <div className="product__card" >
+      <Link to={`/product/${product._id}`}>
         <div className="card__img">
           <img
             className={`${product.isSold ? "disabled" : ""}`}
@@ -20,7 +20,7 @@ const ProductCard = ({ product }) => {
           />
           <div className={product.isSold ? "sold" : ""}>{Sold}</div>
         </div>
-        <div className="card__info">
+        <div className={`card__info ${product.isSold ? "disabled" : ""}`}>
           <h3 className="card__name">{product.name}</h3>
           <p className="card__price">
             &#8358;{" "}
@@ -30,7 +30,7 @@ const ProductCard = ({ product }) => {
       </Link>
       <div className="card__footer">
         <form action="">
-          <button className="add__cart">Add to cart</button>
+          <button className={`add__cart ${product.isSold ? "hidden" : ""}`} disabled={product.isSold}>Add to cart</button>
         </form>
       </div>
     </div>

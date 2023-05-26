@@ -3,6 +3,10 @@
     filter: grayscale(100%);
 }
 
+.hidden{
+    visibility: hidden;
+}
+
 .product__card {
     width: calc(25% - 8px);
     margin: 4px;
@@ -11,12 +15,11 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background: #fff;
     &:hover{
         box-shadow: 0 0 12px 0 rgba(0, 0, 0, .12);
         transform: scale(1.01);
-        &>.add__cart{
-            opacity: 1;
-        }
+        
     }
 
     .card__img {
@@ -62,7 +65,7 @@
         }
 
         .card__price {
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.875rem;
             text-align: left;
             padding-top: 4px;
@@ -90,7 +93,7 @@
             font-size: 0.875rem;
             line-height: 1rem;
             box-shadow: 0 4px 8px 0 rgba(0,0,0,.2);
-            opacity: 0;
+            
             &:hover{
                 background: #f86338;
                 color: white;

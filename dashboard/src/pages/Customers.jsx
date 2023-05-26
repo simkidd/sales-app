@@ -25,6 +25,10 @@ const columns = [
     dataIndex: "role",
   },
   {
+    title: "Date joined",
+    dataIndex: "dateJoined",
+  },
+  {
     title: "Action",
     dataIndex: "action",
   },
@@ -53,7 +57,7 @@ const Customers = () => {
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
           },
         });
-        console.log(res.data.users);
+        // console.log(res.data.users);
         setUsers(res.data.users);
       } catch (error) {
         console.log(error);
@@ -69,7 +73,12 @@ const Customers = () => {
         key: i + 1,
         name: user.name,
         email: user.email,
-        role: user.isAdmin === true ? <span className="text-danger">Admin</span>  : <span className="green">User</span>,
+        role: user.isAdmin === true ? <span className="text-warning">Admin</span>  : <span className="green">User</span>,
+        dateJoined: new Date(user.createdAt).toLocaleDateString("en-US", {
+          month: 'short',
+          day:'2-digit',
+          year: 'numeric'
+        }),
         action: (
           <>
             <Link to="/" className=" fs-3 text-blue">
@@ -77,9 +86,6 @@ const Customers = () => {
             </Link>
             <Link className="ms-3 fs-3 text-danger" to="/">
               <AiFillDelete />
-            </Link>
-            <Link className="ms-3 fs-3 text-black" to="/">
-              <BsEye />
             </Link>
           </>
         ),
