@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import React, { useEffect, useState, useContext } from "react";
+import { Button, Input, Modal, Table } from "antd";
 import axios from "axios";
 import apiConfig from "../utils/apiConfig";
 import { Link } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
-import { BsEye } from "react-icons/bs";
+import { ToastContainer, toast } from "react-toastify";
+import { UserContext } from "../contexts/UserContext";
 
 const columns = [
   {
@@ -35,37 +36,90 @@ const columns = [
 ];
 
 const Customers = () => {
-  const [users, setUsers] = useState([]);
+  const { users, setUsers } = useContext(UserContext);
   const [usersData, setUsersData] = useState([]);
-  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { base_url } = apiConfig;
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem("token"); // Read the token from local storage
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
 
-        if (!token) {
-          // Handle the case when the token is not available
-          // For example, redirect the user to the login page
-          return;
-        }
+      await axios.delete(`${base_url}/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUsers(users.filter((user) => user._id !== id));
+      toast.success("User deleted successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error(`Error: ${error.response.data.error}`);
+    }
+  };
 
-        const res = await axios.get(`${base_url}/users`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        });
-        // console.log(res.data.users);
-        setUsers(res.data.users);
-      } catch (error) {
-        console.log(error);
-        setError(error.response.data.error)
-      }
-    };
-    fetchUsers();
-  }, []);
+  const showDeleteConfirm = (id) => {
+    Modal.confirm({
+      title: "Confirm Delete",
+      content: "Are you sure you want to delete this product?",
+      okText: "Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: () => {
+        handleDelete(id);
+      },
+    });
+  };
+
+  const handleSearch = () => {
+    // Perform search logic here based on the searchQuery
+    // You can customize this function according to your requirements
+
+    // For example, filter the products based on the searchQuery
+    const filteredUsers = users.filter((user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const data = filteredUsers.map((user, i) => ({
+      // Rest of the data mapping...
+      key: i + 1,
+      name: user.name,
+      email: user.email,
+      role:
+        user.isAdmin === true ? (
+          <span className="text-warning">Admin</span>
+        ) : (
+          <span className="green">User</span>
+        ),
+      dateJoined: new Date(user.createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      action: (
+        <>
+          <Link to={`${user._id}`} className=" fs-3 text-blue">
+            <BiEdit />
+          </Link>
+          <button
+            className="ms-3 fs-3 text-danger delete-btn"
+            onClick={() => showDeleteConfirm(user._id)}
+          >
+            <AiFillDelete />
+          </button>
+        </>
+      ),
+    }));
+
+    setUsersData(data);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   useEffect(() => {
     if (users.length > 0) {
@@ -73,39 +127,58 @@ const Customers = () => {
         key: i + 1,
         name: user.name,
         email: user.email,
-        role: user.isAdmin === true ? <span className="text-warning">Admin</span>  : <span className="green">User</span>,
+        role:
+          user.isAdmin === true ? (
+            <span className="text-warning">Admin</span>
+          ) : (
+            <span className="green">User</span>
+          ),
         dateJoined: new Date(user.createdAt).toLocaleDateString("en-US", {
-          month: 'short',
-          day:'2-digit',
-          year: 'numeric'
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
         }),
         action: (
           <>
-            <Link to="/" className=" fs-3 text-blue">
+            <Link to={`${user._id}`} className=" fs-3 text-blue">
               <BiEdit />
             </Link>
-            <Link className="ms-3 fs-3 text-danger" to="/">
+            <button
+              className="ms-3 fs-3 text-danger delete-btn"
+              onClick={() => showDeleteConfirm(user._id)}
+            >
               <AiFillDelete />
-            </Link>
+            </button>
           </>
         ),
       }));
 
       setUsersData(data);
     }
-  }, [users]);
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+  }, [users, searchQuery]);
 
   return (
     <div>
       <h3 className="mb-4">Customers</h3>
-      {error && <p>{error}</p>}
+      <div className="mb-4">
+        <Input
+          placeholder="Search for a customer..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ width: 200, marginRight: 8 }}
+          onPressEnter={handleKeyPress} // Add the onPressEnter event handler
+        />
+        <Button type="primary" onClick={handleSearch}>
+          Search
+        </Button>
+      </div>
+      <div className="mb-2 text-black-50">
+        {usersData.length} users found
+      </div>
       <div>
         <Table columns={columns} dataSource={usersData} />
       </div>
+      <ToastContainer />
     </div>
   );
 };

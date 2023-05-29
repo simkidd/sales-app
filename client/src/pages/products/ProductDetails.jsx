@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import apiConfig from "../../utils/apiConfig";
@@ -7,10 +7,13 @@ import Meta from "../../components/Meta";
 import { MdAddShoppingCart } from "react-icons/md";
 import { AiOutlineHeart } from "react-icons/ai";
 import Rating from "@mui/material/Rating";
+import { CartContext } from "../../contexts/CartContext";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState("");
   const { _id } = useParams();
+  //extract these functions from the CartContext
+  const { addToCart } = useContext(CartContext);
 
   const { base_url } = apiConfig;
 
@@ -88,15 +91,16 @@ const ProductDetails = () => {
                   </div>
                 </div>
                 <div className="add__button">
-                  <form action="">
+                  <div className="btn__form">
                     <button
                       className={`add__cart ${product.isSold ? "hidden" : ""}`}
                       disabled={product.isSold}
+                      onClick={() => addToCart(product, product._id)}
                     >
                       <MdAddShoppingCart size={20} />
                       <span>Add to cart</span>
                     </button>
-                  </form>
+                  </div>
 
                   <div className="wishlist">
                     <button className="add__wish">

@@ -1,35 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import "./products.scss";
-import apiConfig from "../../utils/apiConfig";
-import axios from "axios";
 import ProductCard from "../../components/product-card/ProductCard";
 import { Link } from "react-router-dom";
 import Meta from "../../components/Meta";
-import Breadcrumb from "../../components/breadcrumb/Breadcrumb";
+import { ProductContext } from "../../contexts/ProductContext";
+import {TbListDetails} from 'react-icons/tb'
+import {HiViewGrid} from 'react-icons/hi';
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
-
-  const { base_url } = apiConfig;
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`${base_url}/products`);
-        console.log(response.data);
-        setProducts(response.data.products);
-      } catch (error) {
-        setError(error.response.data.error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+  const { products } = useContext(ProductContext);
 
   return (
     <>
@@ -70,10 +49,23 @@ const Products = () => {
           </article>
           <article>
             <h2 className="side__header">Price</h2>
+            price range
           </article>
         </div>
         <div className="product__items">
-          <div></div>
+          <div className="product__list__header">
+            <div className="list__top__header">
+              <h1>Shop Online</h1>
+              <div className="list__sort">Sort by: <span>Popularity</span></div>
+            </div>
+            <div className="list__bottom__header">
+              <p>{products.length} products found</p>
+              <div className="list__views">
+                {" "}
+                <TbListDetails size={22} /> <HiViewGrid size={22} />
+              </div>
+            </div>
+          </div>
           {products.length === 0 ? (
             <p>No products available</p>
           ) : (

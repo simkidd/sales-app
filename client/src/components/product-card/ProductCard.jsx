@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./product-card.scss";
 import { Link } from "react-router-dom";
+import { CartContext } from "../../contexts/CartContext";
 
 const ProductCard = ({ product }) => {
+  const {addToCart} = useContext(CartContext);
+
   const Img = product.image
     ? product.image
     : "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
@@ -10,7 +13,7 @@ const ProductCard = ({ product }) => {
   const Sold = product.isSold && "Sold";
 
   return (
-    <div className="product__card" >
+    <div className="product__card">
       <Link to={`/product/${product._id}`}>
         <div className="card__img">
           <img
@@ -29,9 +32,15 @@ const ProductCard = ({ product }) => {
         </div>
       </Link>
       <div className="card__footer">
-        <form action="">
-          <button className={`add__cart ${product.isSold ? "hidden" : ""}`} disabled={product.isSold}>Add to cart</button>
-        </form>
+        <div className="card__btn">
+          <button
+            className={`add__cart ${product.isSold ? "hidden" : ""}`}
+            disabled={product.isSold}
+            onClick={()=> addToCart(product, product._id)}
+          >
+            Add to cart
+          </button>
+        </div>
       </div>
     </div>
   );

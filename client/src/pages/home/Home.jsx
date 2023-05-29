@@ -45,6 +45,34 @@ const Home = () => {
           </div>
         </div>
       </section>
+      
+      <div className="row">
+        <div className="row__container">
+          <div className="section">
+            <div className="section__header">
+              <div>
+                <h2 className="h__h2">Recently Viewed</h2>
+                <Link>See all</Link>
+              </div>
+            </div>
+            <div className="section__content">
+              <div className="slides">slide cards</div>
+            </div>
+          </div>
+        </div>
+        <div className="row__container">
+          <div className="section">
+            <div className="section__header">
+              <div>
+                <h2>Heading</h2>
+              </div>
+            </div>
+            <div className="section__content">
+              <div className="slides">slide cards</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

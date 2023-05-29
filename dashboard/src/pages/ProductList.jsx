@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import React, { useEffect, useState, useContext } from "react";
+import { Table, Modal, Input, Button } from "antd";
 import { AiFillDelete } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import { BsEye } from "react-icons/bs";
@@ -8,6 +8,7 @@ import axios from "axios";
 import apiConfig from "../utils/apiConfig";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ProductContext } from "../contexts/ProductContext";
 
 const columns = [
   {
@@ -23,24 +24,29 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    // sorter: (a, b) => a.title.length - b.title.length,
     width: "350px",
     ellipsis: true,
+    sorter: (a, b) => a.name.localeCompare(b.name),
   },
   {
     title: "Price",
     dataIndex: "price",
-    // sorter: (a, b) => a.price - b.price,
+    sorter: (a, b) => a.price - b.price,
   },
   {
     title: "Date Posted",
     dataIndex: "posted",
-    // sorter: (a, b) => a.price - b.price,
+    sorter: (a, b) => new Date(a.posted) - new Date(b.posted),
   },
   {
     title: "In Stock",
     dataIndex: "inStock",
     width: "100px",
+    sorter: (a, b) => {
+      if (a.inStock.props.children === "Sold") return -1;
+      if (b.inStock.props.children === "Sold") return 1;
+      return 0;
+    },
   },
   {
     title: "Action",
@@ -50,36 +56,11 @@ const columns = [
 ];
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
+  const { products, setProducts } = useContext(ProductContext);
   const [productsData, setProductsData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { base_url } = apiConfig;
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const token = localStorage.getItem("token"); // Read the token from local storage
-
-        if (!token) {
-          // Handle the case when the token is not available
-          // For example, redirect the user to the login page
-          return;
-        }
-
-        const response = await axios.get(`${base_url}/products`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
-          },
-        });
-        // console.log(response.data.products);
-        setProducts(response.data.products);
-      } catch (error) {
-        console.log(error)
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -98,8 +79,78 @@ const ProductList = () => {
     }
   };
 
+  const showDeleteConfirm = (id) => {
+    Modal.confirm({
+      title: "Confirm Delete",
+      content: "Are you sure you want to delete this product?",
+      okText: "Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: () => {
+        handleDelete(id);
+      },
+    });
+  };
+
+  const handleSearch = () => {
+    // Perform search logic here based on the searchQuery
+    // You can customize this function according to your requirements
+
+    // For example, filter the products based on the searchQuery
+    const filteredProducts = products.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const data = filteredProducts.map((product, i) => ({
+      // Rest of the data mapping...
+      key: i + 1,
+      image: (
+        <img src={product.image} alt="Product" style={{ width: "50px" }} />
+      ),
+      name: product.name,
+      price: (
+        <p>
+          &#8358;
+          {product.price}
+        </p>
+      ),
+      inStock:
+        product.isSold === true ? (
+          <span className="text-danger">Sold</span>
+        ) : (
+          <span className="green">Available</span>
+        ),
+      posted: new Date(product.createdAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+      action: (
+        <>
+          <Link to={`${product._id}`} className=" fs-3 text-blue">
+            <BiEdit />
+          </Link>
+          <button
+            className="ms-3 fs-3 text-danger delete-btn"
+            onClick={() => showDeleteConfirm(product._id)}
+          >
+            <AiFillDelete />
+          </button>
+        </>
+      ),
+    }));
+
+    setProductsData(data);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   useEffect(() => {
-    if (products.length > 0) {
+    if (products.length > 0 && searchQuery === "") {
       const data = products.map((product, i) => ({
         key: i + 1,
         image: (
@@ -125,12 +176,12 @@ const ProductList = () => {
         }),
         action: (
           <>
-            <Link to={`details/${product._id}`} className=" fs-3 text-blue">
+            <Link to={`${product._id}`} className=" fs-3 text-blue">
               <BiEdit />
             </Link>
             <button
               className="ms-3 fs-3 text-danger delete-btn"
-              onClick={() => handleDelete(product._id)}
+              onClick={() => showDeleteConfirm(product._id)}
             >
               <AiFillDelete />
             </button>
@@ -140,11 +191,26 @@ const ProductList = () => {
 
       setProductsData(data);
     }
-  }, [products]);
+  }, [products, searchQuery]);
 
   return (
     <div>
       <h3 className="mb-4 title">Products</h3>
+      <div className="mb-4">
+        <Input
+          placeholder="Search for a product..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ width: 200, marginRight: 8 }}
+          onPressEnter={handleKeyPress} // Add the onPressEnter event handler
+        />
+        <Button type="primary" onClick={handleSearch}>
+          Search
+        </Button>
+      </div>
+      <div className="mb-2 text-black-50">
+        {productsData.length} products found
+      </div>
       <div>
         <Table columns={columns} dataSource={productsData} />
       </div>

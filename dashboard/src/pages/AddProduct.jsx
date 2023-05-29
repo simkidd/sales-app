@@ -9,6 +9,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false); 
 
   const { base_url } = apiConfig;
 
@@ -23,6 +24,8 @@ const AddProduct = () => {
         // For example, redirect the user to the login page
         return;
       }
+
+      setLoading(true); 
 
       const response = await axios.post(
         `${base_url}/products`,
@@ -51,6 +54,8 @@ const AddProduct = () => {
     } catch (error) {
       console.error(error);
       toast.error(`Error: ${error.response.data.error}`);
+    }finally {
+      setLoading(false); // Set loading state to false after request completion
     }
   };
 
@@ -106,8 +111,8 @@ const AddProduct = () => {
             onChange={(e) => setImage(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
-          Add Product
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Adding..." : "Add Product"}
         </button>
       </form>
     </div>

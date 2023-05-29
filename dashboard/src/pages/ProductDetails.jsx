@@ -89,10 +89,7 @@ const ProductDetails = () => {
         <h3 className="mb-4">Product Details</h3>
         <img src={product.image} alt="img" className="w-50" />
         <p className="fw-bold">{product.name}</p>
-        <p className="fw-bold">
-          Description: <br />{" "}
-          <span className="fw-normal">{product.description}</span>{" "}
-        </p>
+        
         <p className="fw-bold">
           Price: <br /> <span className="">&#8358; {product.price}</span>{" "}
         </p>
@@ -103,6 +100,10 @@ const ProductDetails = () => {
           ) : (
             <span className="green">Available</span>
           )}
+        </p>
+        <p className="fw-bold">
+          Description: <br />{" "}
+          <span className="fw-normal">{product.description}</span>{" "}
         </p>
         {/* Additional product details can be displayed here */}
       </div>

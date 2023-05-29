@@ -6,9 +6,12 @@ import { AiOutlineHeart, AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiChevronDown } from "react-icons/fi";
 import Marquee from "react-fast-marquee";
 import { AuthContext } from "../../contexts/AuthContext";
+import { CartContext } from "../../contexts/CartContext";
 
 const Navbar = () => {
   const { isAuthenticated } = useContext(AuthContext);
+  // extract items count from cartContext
+  const { cart, itemCount } = useContext(CartContext);
 
   return (
     <>
@@ -86,10 +89,14 @@ const Navbar = () => {
               </li>
             )}
             <li>
-              <Link className="link__item cart" to="/cart">
+              <Link className="link__item cart__btn" to="/cart">
                 <BsCart3 size={20} />
                 Cart
-                <span className="badge">10</span>
+                {cart.length > 0 ? (
+                  <span className="badge">{cart.length}</span>
+                ) : (
+                  <span className="badge">0</span>
+                )}
               </Link>
             </li>
           </ul>

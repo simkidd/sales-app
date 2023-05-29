@@ -5,13 +5,14 @@
     align-items: center;
     justify-content: center;
 
-   .ad{
-    display: flex;
-    h2{
-        margin-right: 4rem;
-        color: red;
+    .ad {
+        display: flex;
+
+        h2 {
+            margin-right: 4rem;
+            color: red;
+        }
     }
-   }
 }
 
 .navbar {
@@ -27,7 +28,7 @@
     .navbar__container {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        // justify-content: space-between;
         width: 100%;
         max-width: 1184px;
         flex-wrap: nowrap;
@@ -45,8 +46,9 @@
         .navbar__left {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            // justify-content: space-between;
             gap: 16px;
+            flex: 2;
 
             .nav__links {
                 display: flex;
@@ -64,57 +66,54 @@
                 }
             }
 
-            // .navbar__search {
-            //     width: 600px;}
+            .navbar__search {
+                max-width: 100%;
+                flex: 1;
+                display: flex;
+                // width: 500px;
 
-                .navbar__search {
-                    max-width: 100%;
-                    flex-grow: 1;
+                .find {
                     display: flex;
-                    width: 500px;
+                    align-items: center;
+                    border: 1px solid #a3a3a6;
+                    position: relative;
+                    height: 36px;
+                    width: 100%;
+                    position: relative;
 
-                    .find {
-                        display: flex;
-                        align-items: center;
-                        border: 1px solid #a3a3a6;
-                        position: relative;
-                        height: 36px;
+                    .search__input {
+                        box-sizing: border-box;
                         width: 100%;
-                        position: relative;
+                        // padding: 5px;
+                        font-size: .875rem;
+                        outline: none;
+                        border: 0;
+                        padding: 0 16px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        flex-grow: 1;
+                        height: 100%;
+                        overflow: hidden;
+                    }
 
-                        .search__input {
-                            box-sizing: border-box;
-                            width: 100%;
-                            // padding: 5px;
-                            font-size: .875rem;
-                            outline: none;
-                            border: 0;
-                            padding: 0 16px;
-                            white-space: nowrap;
-                            text-overflow: ellipsis;
-                            flex-grow: 1;
-                            height: 100%;
-                            overflow: hidden;
-                        }
+                    .search__button {
+                        background: #f86338;
+                        border: 0;
+                        outline: 0;
+                        line-height: 1rem;
+                        text-align: center;
+                        font-weight: 500;
+                        padding: 0 16px;
+                        height: 100%;
+                        cursor: pointer;
 
-                        .search__button {
-                            background: #f86338;
-                            border: 0;
-                            outline: 0;
-                            line-height: 1rem;
-                            text-align: center;
-                            font-weight: 500;
-                            padding: 0 16px;
-                            height: 100%;
-                            cursor: pointer;
-
-                            svg {
-                                color: white;
-                            }
+                        svg {
+                            color: white;
                         }
                     }
                 }
-            
+            }
+
         }
 
         .navbar__right {
@@ -122,6 +121,8 @@
             align-items: center;
             margin-left: 16px;
             gap: 16px;
+            flex: 1;
+            justify-content: end;
 
             .link__item {
                 position: relative;
@@ -150,7 +151,7 @@
                 }
             }
 
-            .cart {
+            .cart__btn {
                 background: #565673;
                 color: white;
                 padding: 8px;
