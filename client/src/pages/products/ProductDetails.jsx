@@ -4,8 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import apiConfig from "../../utils/apiConfig";
 import "./product-details.scss";
 import Meta from "../../components/Meta";
-import { MdAddShoppingCart } from "react-icons/md";
-import { AiOutlineHeart } from "react-icons/ai";
+import { MdAddShoppingCart, MdBookmarkBorder } from "react-icons/md";
 import Rating from "@mui/material/Rating";
 import { CartContext } from "../../contexts/CartContext";
 
@@ -104,7 +103,7 @@ const ProductDetails = () => {
 
                   <div className="wishlist">
                     <button className="add__wish">
-                      <AiOutlineHeart size={24} />
+                      <MdBookmarkBorder size={24} />
                     </button>
                     <span>Save for later</span>
                   </div>

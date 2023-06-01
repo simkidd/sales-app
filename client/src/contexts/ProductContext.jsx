@@ -10,17 +10,23 @@ const ProductProvider =({children}) =>{
     const {base_url} = apiConfig;
 
     useEffect(() => {
+      console.log('ProductProvider mounted'); 
         const fetchProducts = async () => {
+          console.log('Fetching products'); 
           try {
             const response = await axios.get(`${base_url}/products`);
-            console.log(response.data);
+            // console.log(response.data);
             setProducts(response.data.products);
           } catch (error) {
-            setError(error.response.data.error);
+            console.error(error);
           }
         };
     
         fetchProducts();
+
+        return () => {
+          console.log('ProductProvider unmounted'); // Add console log for unmounting
+        };
       }, []);
 
     return(

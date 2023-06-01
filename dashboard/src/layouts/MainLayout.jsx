@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input, Layout, Menu, Spin, theme } from "antd";
 import "./main-layout.scss";
 import { Outlet } from "react-router-dom";
@@ -12,9 +12,9 @@ import {
 } from "react-icons/ai";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
-import { FaClipboardList } from "react-icons/fa";
+import { FaClipboardList,FaBars } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
-import { useEffect } from "react";
+import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarRightCollapse } from "react-icons/tb";
 
 const { Header, Sider, Content } = Layout;
 
@@ -156,7 +156,7 @@ const MainLayout = () => {
           <Button
             className="trigger"
             type="text"
-            icon={collapsed ? <AiOutlinePicRight /> : <AiOutlinePicLeft />}
+            icon={collapsed ? <TbLayoutSidebarRightCollapse /> : <TbLayoutSidebarLeftCollapse />}
             onClick={() => setCollapsed(!collapsed)}
             style={{
               fontSize: "24px",
@@ -177,12 +177,12 @@ const MainLayout = () => {
                 {/* <img src="" alt="img" /> */}
               </div>
               <div>
-                <h5 className="text-dark">{user.name}</h5>
+                <h5 className="text-dark">{user.firstName +" "+user.lastName}</h5>
                 <p>{user.email}</p>
               </div>
             </div>
 
-            <Button type="text" onClick={handleLogout}>
+            <Button type="text" className="text-bg-danger" onClick={handleLogout}>
               Logout
             </Button>
           </div>

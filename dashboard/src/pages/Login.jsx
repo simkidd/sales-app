@@ -13,22 +13,21 @@ const Login = () => {
 
   const { base_url } = apiConfig;
 
-  const onFinish = async (values) => {
+  const onFinish = async () => {
     try {
-      const response = await axios.post(`${base_url}/login`, {
-        email: values.email,
-        password: values.password,
+      const res = await axios.post(`${base_url}/login`, {
+        email,
+        password,
       });
 
-      const user = response.data.data;
+      const user = res.data.user;
 
       if (!user.isAdmin) {
         toast.error("You must be an admin to log in.");
         return;
       }
 
-      localStorage.setItem("token", response.data.token);
-      console.log(response.data.data);
+      localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(user)); // Store the user data in local storage
 
       navigate("/admin");
@@ -41,7 +40,7 @@ const Login = () => {
   return (
     <div className="py-5" style={{ background: "#ffd333", minHeight: "100vh" }}>
       <div className="my-5 w-25 bg-white rounded-3 mx-auto p-4">
-        <h3 className="text-center text">Login</h3>
+        <h3 className="text-center">Login</h3>
         <p className="text-center">Login to your account to continue</p>
         <ToastContainer />
 

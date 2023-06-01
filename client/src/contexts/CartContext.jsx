@@ -1,99 +1,165 @@
 import { createContext, useEffect, useState } from "react";
+import apiConfig from "../utils/apiConfig";
+import axios from "axios";
 
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
-  // Load the cart data from local storage on component mount
-  const [cart, setCart] = useState(
-    JSON.parse(localStorage.getItem("cart")) || []
-  );
-  //item amount state
+  const { base_url } = apiConfig;
+
+  const [cartItems, setCartItems] = useState([]);
+  // Item count state
   const [itemCount, setItemCount] = useState(0);
-  //total price state
+  // Total price state
   const [total, setTotal] = useState(0);
 
-  // Save the cart data to local storage on each cart change
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    setCartItems(storedCartItems);
+  }, []);
 
   useEffect(() => {
-    const total = cart.reduce((accumulator, currentItem) => {
-      return accumulator + currentItem.price * currentItem.quantity;
-    }, 0);
-    setTotal(total);
-  });
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
-  //update the item amount
+  // Calculate total and item count
   useEffect(() => {
-    if (cart) {
-      const quantity = cart.reduce((accumulator, currentItem) => {
-        return accumulator + currentItem.quantity;
-      }, 0);
-      setItemCount(quantity);
-    }
-  }, [cart]);
-
-  const addToCart = (product, _id) => {
-    const newItem = { ...product, quantity: 1 };
-    //check if the item is already in the cart
-    const cartItem = cart.find((item) => {
-      return item._id === _id;
-    });
-    // if cart item is already in the cart
-    if (cartItem) {
-      const newCart = [...cart].map((item) => {
-        if (item._id === _id) {
-          return { ...item, quantity: cartItem.quantity + 1 };
-        } else {
-          return item;
-        }
+    const calculateTotalAndItemCount = () => {
+      let total = 0;
+      let count = 0;
+      cartItems.forEach((item) => {
+        total += item.product.price * item.quantity;
+        count += item.quantity;
       });
-      setCart(newCart);
-    } else {
-      setCart([...cart, newItem]);
-    }
-  };
+      setTotal(total);
+      setItemCount(count);
+    };
 
-  const removeFromCart = (_id) => {
-    const newCart = cart.filter((item) => {
-      return item._id !== _id;
-    });
-    setCart(newCart);
-  };
+    calculateTotalAndItemCount();
+  }, [cartItems]);
 
-  const clearCart = () => {
-    setCart([]);
-  };
+  // Fetch the cart items on component mount
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
-  const increaseQuantity = (_id) => {
-    const cartItem = cart.find((item) => item._id === _id);
-    addToCart(cartItem, _id);
-  };
+  // Fetch the cart items from the server
+  const fetchCartItems = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-  const decreaseQuantity = (_id) => {
-    const cartItem = cart.find((item) => {
-      return item._id === _id;
-    });
-    if (cartItem) {
-      const newCart = cart.map((item) => {
-        if (item._id === _id) {
-          return { ...item, quantity: cartItem.quantity - 1 };
-        } else {
-          return item;
-        }
+      const response = await axios.get(`${base_url}/cart`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
       });
-      setCart(newCart);
+      setCartItems(response.data);
+    } catch (error) {
+      console.error(error);
     }
-    if (cartItem.quantity < 2) {
-      removeFromCart(_id);
+  };
+
+  // Add item to cart
+  const addToCart = async (productId) => {
+    try {
+      const token = localStorage.getItem("token"); // Read the token from local storage
+
+      const res = await axios.post(
+        `${base_url}/cart/add/${productId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      setCartItems(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Remove item from cart
+  const removeFromCart = async (cartItemId) => {
+    try {
+      const token = localStorage.getItem("token"); // Read the token from local storage
+
+      const res = await axios.delete(
+        `${base_url}/cart/remove/${cartItemId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      
+      setCartItems(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Clear cart
+  const clearCart = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Read the token from local storage
+
+      const res = await axios.delete(`${base_url}/cart/clear`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      });
+      
+      setCartItems(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Increase item quantity in cart
+  const increaseQuantity = async (cartItemId) => {
+    try {
+      const token = localStorage.getItem("token"); // Read the token from local storage
+
+      const res = await axios.put(
+        `${base_url}/cart/increase/${cartItemId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      setCartItems(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Decrease item quantity in cart
+  const decreaseQuantity = async (cartItemId) => {
+    try {
+      const token = localStorage.getItem("token"); // Read the token from local storage
+
+      const res = await axios.put(
+        `${base_url}/cart/decrease/${cartItemId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+      setCartItems(res.data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
   return (
     <CartContext.Provider
       value={{
-        cart,
+        cartItems,
         addToCart,
         removeFromCart,
         clearCart,

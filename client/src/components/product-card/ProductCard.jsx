@@ -36,7 +36,7 @@ const ProductCard = ({ product }) => {
           <button
             className={`add__cart ${product.isSold ? "hidden" : ""}`}
             disabled={product.isSold}
-            onClick={()=> addToCart(product, product._id)}
+            onClick={()=> addToCart(product._id)}
           >
             Add to cart
           </button>

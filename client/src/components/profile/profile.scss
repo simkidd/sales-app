@@ -1,0 +1,29 @@
+.user__profile {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .05);
+    height: 100%;
+    background: #fff;
+
+    .profile__header {
+        padding: 8px 16px;
+        min-height: 48px;
+        height: 0;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #f1f1f2;
+
+        h1 {
+            font-size: 1.25rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+            overflow: hidden;
+        }
+    }
+
+    .profile__content{
+        display: flex;
+        width: 100%;
+        padding: 8px;
+        flex-wrap: wrap;
+    }
+}

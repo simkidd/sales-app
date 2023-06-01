@@ -1,7 +1,7 @@
 import express from "express";
 import protect from "../middleware/auth";
 import User from "../models/userModel";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.get("/profile", protect, async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json({ message: "Profile retrieved", data: user });
+    res.status(200).json({ message: "Profile retrieved", user });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to get user profile" });
@@ -24,22 +24,26 @@ router.get("/profile", protect, async (req, res) => {
 // update user profile
 router.put("/profile", protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const { id } = req.user; // Get the user ID from the authenticated user
+    const { firstName, lastName, password, dateOfBirth, gender } = req.body;
 
-    if (!user) {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        firstName,
+        lastName,
+        password,
+        dateOfBirth,
+        gender,
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    if (req.body.password) {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      user.password = hashedPassword;
-    }
-
-    const updatedUser = await user.save();
-
-    res.status(200).json({ message: "Profile updated", data: updatedUser });
+    res.status(200).json({ message: "Profile updated", updatedUser });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to update user profile" });

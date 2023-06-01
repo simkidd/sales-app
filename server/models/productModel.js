@@ -14,17 +14,15 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String,
+    type: [String],
     // required: true,
   },
   isSold: {
     type: Boolean,
     default: false,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+},{
+  timestamps: true
 });
 
 const Product = mongoose.model("Product", productSchema);

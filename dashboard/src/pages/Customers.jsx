@@ -62,7 +62,7 @@ const Customers = () => {
   const showDeleteConfirm = (id) => {
     Modal.confirm({
       title: "Confirm Delete",
-      content: "Are you sure you want to delete this product?",
+      content: "Are you sure you want to delete this user?",
       okText: "Delete",
       okType: "danger",
       cancelText: "Cancel",
@@ -78,13 +78,13 @@ const Customers = () => {
 
     // For example, filter the products based on the searchQuery
     const filteredUsers = users.filter((user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    (user.firstName + " " + user.lastName).toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const data = filteredUsers.map((user, i) => ({
       // Rest of the data mapping...
       key: i + 1,
-      name: user.name,
+      name: user.firstName +" "+ user.lastName,
       email: user.email,
       role:
         user.isAdmin === true ? (
@@ -125,7 +125,7 @@ const Customers = () => {
     if (users.length > 0) {
       const data = users.map((user, i) => ({
         key: i + 1,
-        name: user.name,
+        name: user.firstName +" "+ user.lastName,
         email: user.email,
         role:
           user.isAdmin === true ? (

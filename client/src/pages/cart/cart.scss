@@ -71,11 +71,25 @@
                 .cart__header {
                     padding: 8px 0;
                     border-bottom: 1px solid #f1f1f2;
+                    display: flex;
+                    align-items: center;
 
                     h2 {
                         padding: 4px 16px;
                         font-size: 1.25rem;
                         font-weight: 500;
+                    }
+
+                    .clear__btn{
+                        background: none;
+                        border: 0;
+                        color: #f86338;
+                        margin-left: auto;
+                        padding-right: 16px;
+                        &:hover{
+                            text-decoration: underline;
+                            cursor: pointer;
+                        }
                     }
                 }
 

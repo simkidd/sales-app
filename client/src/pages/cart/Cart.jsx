@@ -7,13 +7,14 @@ import { Link } from "react-router-dom";
 
 const Cart = () => {
   //extract these functions from the CartContext
-  const { cart, total, clearCart } = useContext(CartContext);
+  const { total, clearCart, cartItems } = useContext(CartContext);
 
   return (
     <>
       <Meta title={"Cart"} />
       <div className="cart__container">
-        {cart.length === 0 ? (
+        {/* {cart.length === 0 ? ( */}
+        {cartItems.length === 0 ? (
           <div className="empty">
             <img src="" alt="cartImg" />
             <h2>Your cart is empty!</h2>
@@ -27,10 +28,15 @@ const Cart = () => {
             <div className="cart__left">
               <article className="arti">
                 <div className="cart__header">
-                  <h2>Cart ({cart.length})</h2>
+                  {/* <h2>Cart ({cart.length})</h2> */}
+                  <h2>Cart ({cartItems.length})</h2>
+                  <button className="clear__btn" onClick={clearCart}>
+                    Clear
+                  </button>
                 </div>
                 <div className="cart__items">
-                  {cart.map((item) => (
+                  {/* {cart.map((item) => ( */}
+                  {cartItems.map((item) => (
                     <CartItem key={item._id} item={item} />
                   ))}
                 </div>

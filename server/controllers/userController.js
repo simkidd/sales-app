@@ -3,13 +3,26 @@ import User from "../models/userModel";
 // Create a new user (only admin)
 export const createUser = async (req, res) => {
   try {
-    const { name, email, password, isAdmin } = req.body;
-
-    const newUser = new User({
-      name,
+    const {
+      firstName,
+      lastName,
       email,
       password,
+      confirmPassword,
       isAdmin,
+      dateOfBirth,
+      gender,
+    } = req.body;
+
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      isAdmin,
+      dateOfBirth,
+      gender,
     });
 
     const savedUser = await newUser.save();
@@ -57,11 +70,29 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, password, isAdmin } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      isAdmin,
+      dateOfBirth,
+      gender,
+    } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { name, email, password, isAdmin },
+      {
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+        isAdmin,
+        dateOfBirth,
+        gender,
+      },
       { new: true }
     );
 
@@ -95,5 +126,49 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to delete user" });
+  }
+};
+
+// Block a user by ID (only admin)
+export const blockUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { blocked: true },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ message: "User blocked successfully", user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to block user" });
+  }
+};
+
+// Unblock a user by ID (only admin)
+export const unblockUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { blocked: false },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ message: "User unblocked successfully", user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Failed to unblock user" });
   }
 };
