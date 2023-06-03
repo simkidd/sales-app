@@ -1,6 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import apiConfig from "../utils/apiConfig";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export const CartContext = createContext();
 
@@ -31,6 +34,7 @@ const CartProvider = ({ children }) => {
         total += item.product.price * item.quantity;
         count += item.quantity;
       });
+      console.log(cartItems)
       setTotal(total);
       setItemCount(count);
     };
@@ -74,6 +78,7 @@ const CartProvider = ({ children }) => {
         }
       );
       setCartItems(res.data);
+      toast.success("Item added to cart!");
     } catch (error) {
       console.log(error);
     }
@@ -170,6 +175,7 @@ const CartProvider = ({ children }) => {
       }}
     >
       {children}
+      <ToastContainer />
     </CartContext.Provider>
   );
 };

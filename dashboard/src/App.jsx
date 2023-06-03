@@ -6,11 +6,12 @@ import Login from "./pages/Login";
 import MainLayout from "./layouts/MainLayout";
 import Customers from "./pages/Customers";
 import ProductList from "./pages/ProductList";
-import AddProduct from "./pages/AddProduct";
 import ProductDetails from "./pages/ProductDetails";
 import UserDetails from "./pages/UserDetails";
 import ProductProvider from "./contexts/ProductContext";
 import UserProvider from "./contexts/UserContext";
+import Categories from "./pages/Categories";
+import CategoryDetails from "./pages/CategoryDetails";
 
 const App = () => {
   return (
@@ -26,7 +27,8 @@ const App = () => {
               <Route path="users/:id" element={<UserDetails />} />
               <Route path="products" element={<ProductList />} />
               <Route path="products/:id" element={<ProductDetails />} />
-              <Route path="products/new" element={<AddProduct />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="categories/:id" element={<CategoryDetails />} />
             </Route>
           </Routes>
         </Router>

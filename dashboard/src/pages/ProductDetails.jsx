@@ -5,9 +5,9 @@ import apiConfig from "../utils/apiConfig";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "antd";
-import ModelForm from "../components/ModelForm";
 import Meta from "../components/Meta";
 import { BsChevronLeft } from "react-icons/bs";
+import UpdateProduct from "../components/UpdateProduct";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -26,7 +26,7 @@ const ProductDetails = () => {
       try {
         const response = await axios.get(`${base_url}/products/${id}`);
         setProduct(response.data.product);
-        // console.log(response.data.product);
+        console.log(response.data.product);
         setName(response.data.product.name);
         setDescription(response.data.product.description);
         setPrice(response.data.product.price);
@@ -44,12 +44,6 @@ const ProductDetails = () => {
     try {
       const token = localStorage.getItem("token"); // Read the token from local storage
 
-      if (!token) {
-        // Handle the case when the token is not available
-        // For example, redirect the user to the login page
-        return;
-      }
-
       const response = await axios.put(
         `${base_url}/products/${id}`,
         {
@@ -65,8 +59,6 @@ const ProductDetails = () => {
           },
         }
       );
-
-      console.log(response.data); // Handle the response from the server
 
       // Reset the form fields
       setName(response.data.product.name);
@@ -91,9 +83,38 @@ const ProductDetails = () => {
   return (
     <>
       <Meta title={product.name} />
+      <div className="d-flex align-items-center justify-content-between mb-3">
       <Button type="text" className="mb-2 p-0 pe-2">
-        <Link to='/admin/products' className="text-decoration-none d-flex align-items-center" ><BsChevronLeft className="me-2" /> Go Back</Link>
+        <Link to='/admin/products' className="text-decoration-none d-flex align-items-center" ><BsChevronLeft className="me-2" /> Go Back to Products</Link>
       </Button>
+      {/* update product */}
+
+      <Button
+            type="primary"
+            onClick={() => setOpen(true)}
+            onCancel={() => setOpen(false)}
+          >
+            Edit Product
+          </Button>
+
+          <UpdateProduct
+            openForm={open}
+            onCancel={() => setOpen(false)}
+            handleSubmit={handleSubmit}
+            name={name}
+            description={description}
+            price={price}
+            image={image}
+            isSold={isSold}
+            setName={setName}
+            setDescription={setDescription}
+            setPrice={setPrice}
+            setImage={setImage}
+            setIsSold={setIsSold}
+          />
+
+      </div>
+
       <div className="d-flex bg-white p-4">
         <div className="ps-4 pe-4" style={{ maxWidth: "50%", width: "100%" }}>
           <h3 className="mb-4">Product Details</h3>
@@ -119,32 +140,7 @@ const ProductDetails = () => {
           className="ps-4 pe-4 d-flex flex-column"
           style={{ maxWidth: "50%", width: "100%" }}
         >
-          {/* update product */}
-
-          <Button
-            type="primary"
-            onClick={() => setOpen(true)}
-            onCancel={() => setOpen(false)}
-          >
-            Edit Product
-          </Button>
-
-          <ModelForm
-            openForm={open}
-            on
-            onCancel={() => setOpen(false)}
-            handleSubmit={handleSubmit}
-            name={name}
-            description={description}
-            price={price}
-            image={image}
-            isSold={isSold}
-            setName={setName}
-            setDescription={setDescription}
-            setPrice={setPrice}
-            setImage={setImage}
-            setIsSold={setIsSold}
-          />
+          
 
           <p className="fw-bold mt-4">
             Description: <br />{" "}

@@ -1,29 +1,44 @@
 import Product from "../models/productModel";
+import Category from "../models/categoryModel";
 
 // create an Product with image upload
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, image, price } = req.body;
-    
+    const { name, description, image, price, category } = req.body;
+
+    // Check if the category exists
+    const existingCategory = await Category.findById(category);
+    if (!existingCategory) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
     // Check if the required fields are provided
-    if (!name || !description || !price) {
+    if (!name || !description || !price || !category) {
       return res
         .status(400)
-        .json({ error: "Name, description and price are required fields" });
+        .json({ error: "Name, description, price, and category are required fields" });
     }
 
     const productExist = await Product.findOne({ name });
     if (productExist) {
-      res.status(400).json("Product name aleady exists");
+      return res.status(400).json({ error: "Product name already exists" });
     }
+
+    // Create a new product instance
     const newProduct = new Product({
       name,
       description,
       price,
       image,
+      category
     });
 
-    await newProduct.save();
+    // Save the product to the database
+    const savedProduct = await newProduct.save();
+    
+    // Add the product to the category's products array
+    existingCategory.products.push(savedProduct._id);
+    await existingCategory.save();
 
     res.status(201).json({
       message: "Product created successfully",

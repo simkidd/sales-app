@@ -6,6 +6,7 @@ export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const { base_url } = apiConfig;
 
@@ -14,28 +15,41 @@ const ProductProvider = ({ children }) => {
       try {
         const token = localStorage.getItem("token"); // Read the token from local storage
 
-        if (!token) {
-          // Handle the case when the token is not available
-          // For example, redirect the user to the login page
-          return;
-        }
         const response = await axios.get(`${base_url}/products`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the Authorization header
           },
         });
-        console.log(response.data);
         setProducts(response.data.products);
+        console.log(response.data.products);
+      } catch (error) {
+        setError(error.response.data.error);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Read the token from local storage
+
+        const response = await axios.get(`${base_url}/categories`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        });
+        setCategories(response.data.categories);
       } catch (error) {
         setError(error.response.data.error);
       }
     };
 
     fetchProducts();
+    fetchCategories();
   }, []);
 
   return (
-    <ProductContext.Provider value={{ products, setProducts }}>
+    <ProductContext.Provider
+      value={{ products, setProducts, categories, setCategories }}
+    >
       {children}
     </ProductContext.Provider>
   );

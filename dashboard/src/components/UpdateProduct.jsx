@@ -1,7 +1,7 @@
 import React from "react";
-import { Form, Input, InputNumber, Modal, Radio } from "antd";
+import { Form, Input, Modal, Radio } from "antd";
 
-const ModelForm = ({
+const UpdateProduct = ({
   openForm,
   onCancel,
   handleSubmit,
@@ -40,8 +40,8 @@ const ModelForm = ({
         </Form.Item>
         <Form.Item label="Price">
           <Input
-          prefix="&#8358;"
-          type="number"
+            prefix="&#8358;"
+            type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
@@ -67,4 +67,4 @@ const ModelForm = ({
   );
 };
 
-export default ModelForm;
+export default UpdateProduct;

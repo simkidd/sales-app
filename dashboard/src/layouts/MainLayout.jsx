@@ -116,24 +116,14 @@ const MainLayout = () => {
               label: "Catalog",
               children: [
                 {
-                  key: "products/new",
-                  icon: <AiOutlineShoppingCart className="fs-4" />,
-                  label: "Add Product ",
-                },
-                {
                   key: "products",
-                  icon: <SiBrandfolder className="fs-4" />,
-                  label: "Product List ",
+                  icon: <AiOutlineShoppingCart className="fs-4" />,
+                  label: "Products ",
                 },
                 {
-                  key: "category",
+                  key: "categories",
                   icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Category ",
-                },
-                {
-                  key: "category-list",
-                  icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Category List ",
+                  label: "Categories ",
                 },
               ],
             },

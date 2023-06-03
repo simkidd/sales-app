@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes"
 import userRoutes from "./routes/userRoutes"
 import profileRoute from "./routes/profileRoute"
 import cartRoutes from "./routes/cartRoutes"
+import CategoryRoutes from './routes/categoryRoutes'
 import { errorHandler, notFound } from "./middleware/errorHandler";
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use('/api', authRoutes)
 app.use('/api', userRoutes)
 app.use('/api', profileRoute)
 app.use('/api', cartRoutes)
+app.use('/api', CategoryRoutes)
 
 // error handler
 app.use(notFound)

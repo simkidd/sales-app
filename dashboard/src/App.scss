@@ -58,13 +58,14 @@ body {
         main {
             overflow: scroll;
             background: transparent !important;
+            margin-right: 0 !important;
         }
     }
 
     .green {
         color: green;
     }
-
+    
     .red {
         color: red;
     }

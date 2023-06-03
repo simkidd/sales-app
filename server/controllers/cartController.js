@@ -1,4 +1,5 @@
 import CartItem from "../models/cartModel";
+import User from "../models/userModel";
 
 // Get cart items
 export const getCartItems = async (req, res) => {
@@ -41,8 +42,17 @@ export const addToCart = async (req, res) => {
     }
 
     // Retrieve the updated cart items and send the response
-    const cartItems = await CartItem.find({ user: userId }).populate("product");
-    res.json(cartItems);
+    const updatedCartItems = await CartItem.find({ user: userId }).populate("product");
+    const user = await User.findByIdAndUpdate(userId, { cart: updatedCartItems }, { new: true }).select("-password");
+
+    // Map the cart items to include the product price
+    const cartItemsWithPrice = updatedCartItems.map((item) => ({
+      ...item._doc,
+      price: item.product.price
+    }));
+
+res.json(cartItemsWithPrice);
+    // res.json(updatedCartItems)
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Server error" });
